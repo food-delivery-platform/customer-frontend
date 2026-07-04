@@ -1,0 +1,5 @@
+{
+  "/restaurants/:restaurantId/menu": "/menuItems?restaurantId=:restaurantId",
+  "/restaurants/:restaurantId/orders": "/orders?venueId=:restaurantId",
+  "/orders/:orderId/items": "/orderItems?orderId=:orderId"
+}

@@ -1,0 +1,248 @@
+{
+  "restaurants": [
+    {
+      "id": "demo-restaurant",
+      "ownerId": "owner-001",
+      "addressId": "address-restaurant-001",
+      "name": "Demo Bistro",
+      "slug": "demo-bistro",
+      "description": "Fresh bowls, grilled plates, and fast delivery for local customers.",
+      "cuisineTags": ["Mediterranean", "Healthy", "Grill"],
+      "isOpen": true,
+      "rating": 4.7,
+      "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5",
+      "createdAt": "2026-07-01T09:00:00.000Z",
+      "updatedAt": "2026-07-04T09:30:00.000Z"
+    },
+    {
+      "id": "sushi-yard",
+      "ownerId": "owner-002",
+      "addressId": "address-restaurant-002",
+      "name": "Sushi Yard",
+      "slug": "sushi-yard",
+      "description": "Sushi rolls, rice bowls, and crisp sides prepared to order.",
+      "cuisineTags": ["Japanese", "Sushi", "Bowls"],
+      "isOpen": false,
+      "rating": 4.4,
+      "imageUrl": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c",
+      "createdAt": "2026-06-18T11:15:00.000Z",
+      "updatedAt": "2026-07-04T08:45:00.000Z"
+    }
+  ],
+  "menuItems": [
+    {
+      "id": "menu-item-001",
+      "restaurantId": "demo-restaurant",
+      "menuItemId": "falafel-bowl",
+      "name": "Falafel Bowl",
+      "description": "Falafel, tahini, chopped salad, pickles, and herbed rice.",
+      "price": 42,
+      "imageKey": "menu/falafel-bowl.jpg",
+      "category": "Bowls",
+      "isAvailable": true,
+      "ingredients": ["falafel", "tahini", "tomato", "cucumber", "rice"],
+      "labels": {
+        "spicy": false,
+        "vegetarian": true,
+        "vegan": true,
+        "kosher": true,
+        "glutenFree": false,
+        "lactoseFree": true,
+        "halal": true
+      },
+      "portion": {
+        "weightGrams": 480,
+        "pieces": 1,
+        "description": "One filling bowl"
+      },
+      "spicyLevel": 0,
+      "nutrition": {
+        "calories": 610,
+        "protein": 22,
+        "fat": 24,
+        "carbs": 76
+      },
+      "createdAt": "2026-07-01T10:00:00.000Z",
+      "updatedAt": "2026-07-04T09:20:00.000Z"
+    },
+    {
+      "id": "menu-item-002",
+      "restaurantId": "demo-restaurant",
+      "menuItemId": "chicken-shawarma-plate",
+      "name": "Chicken Shawarma Plate",
+      "description": "Marinated chicken, rice, salad, hummus, and warm pita.",
+      "price": 58,
+      "imageKey": "menu/chicken-shawarma-plate.jpg",
+      "category": "Plates",
+      "isAvailable": true,
+      "ingredients": ["chicken", "rice", "hummus", "pita", "salad"],
+      "labels": {
+        "spicy": true,
+        "vegetarian": false,
+        "vegan": false,
+        "kosher": true,
+        "glutenFree": false,
+        "lactoseFree": true,
+        "halal": true
+      },
+      "portion": {
+        "weightGrams": 620,
+        "pieces": 1,
+        "description": "Large plate with side pita"
+      },
+      "spicyLevel": 2,
+      "nutrition": {
+        "calories": 860,
+        "protein": 48,
+        "fat": 32,
+        "carbs": 92
+      },
+      "createdAt": "2026-07-01T10:10:00.000Z",
+      "updatedAt": "2026-07-04T09:25:00.000Z"
+    },
+    {
+      "id": "menu-item-003",
+      "restaurantId": "sushi-yard",
+      "menuItemId": "salmon-avocado-roll",
+      "name": "Salmon Avocado Roll",
+      "description": "Eight pieces with salmon, avocado, cucumber, and sesame.",
+      "price": 49,
+      "imageKey": "menu/salmon-avocado-roll.jpg",
+      "category": "Rolls",
+      "isAvailable": true,
+      "ingredients": ["salmon", "avocado", "cucumber", "rice", "nori"],
+      "labels": {
+        "spicy": false,
+        "vegetarian": false,
+        "vegan": false,
+        "kosher": false,
+        "glutenFree": true,
+        "lactoseFree": true,
+        "halal": false
+      },
+      "portion": {
+        "pieces": 8,
+        "description": "Eight sushi pieces"
+      },
+      "spicyLevel": 0,
+      "nutrition": {
+        "calories": 430,
+        "protein": 19,
+        "fat": 14,
+        "carbs": 57
+      },
+      "createdAt": "2026-06-18T12:00:00.000Z",
+      "updatedAt": "2026-07-03T17:10:00.000Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "order-001",
+      "customerId": "customer-001",
+      "venueId": "demo-restaurant",
+      "deliveryAddressId": "address-customer-001",
+      "courierId": "courier-001",
+      "status": "PICKED_UP",
+      "subtotal": 100,
+      "deliveryFee": 12,
+      "total": 112,
+      "currency": "ILS",
+      "specialInstructions": "Please call when arriving at the lobby.",
+      "estimatedDeliveryAt": "2026-07-04T12:40:00.000Z",
+      "restaurantConfirmationDeadline": "2026-07-04T12:05:00.000Z",
+      "cancelledReason": null,
+      "createdAt": "2026-07-04T11:55:00.000Z",
+      "updatedAt": "2026-07-04T12:20:00.000Z",
+      "items": [
+        {
+          "id": "order-item-001",
+          "orderId": "order-001",
+          "menuItemId": "menu-item-001",
+          "quantity": 1,
+          "unitPrice": 42,
+          "lineTotal": 42,
+          "specialInstructions": null,
+          "menuItemName": "Falafel Bowl",
+          "createdAt": "2026-07-04T11:55:00.000Z"
+        },
+        {
+          "id": "order-item-002",
+          "orderId": "order-001",
+          "menuItemId": "menu-item-002",
+          "quantity": 1,
+          "unitPrice": 58,
+          "lineTotal": 58,
+          "specialInstructions": "Extra amba on the side.",
+          "menuItemName": "Chicken Shawarma Plate",
+          "createdAt": "2026-07-04T11:55:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "order-002",
+      "customerId": "customer-001",
+      "venueId": "sushi-yard",
+      "deliveryAddressId": "address-customer-001",
+      "courierId": null,
+      "status": "AWAITING_PAYMENT",
+      "subtotal": 49,
+      "deliveryFee": 10,
+      "total": 59,
+      "currency": "ILS",
+      "specialInstructions": null,
+      "estimatedDeliveryAt": null,
+      "restaurantConfirmationDeadline": null,
+      "cancelledReason": null,
+      "createdAt": "2026-07-04T13:05:00.000Z",
+      "updatedAt": "2026-07-04T13:05:00.000Z",
+      "items": [
+        {
+          "id": "order-item-003",
+          "orderId": "order-002",
+          "menuItemId": "menu-item-003",
+          "quantity": 1,
+          "unitPrice": 49,
+          "lineTotal": 49,
+          "specialInstructions": "No wasabi.",
+          "menuItemName": "Salmon Avocado Roll",
+          "createdAt": "2026-07-04T13:05:00.000Z"
+        }
+      ]
+    }
+  ],
+  "orderItems": [
+    {
+      "id": "order-item-001",
+      "orderId": "order-001",
+      "menuItemId": "menu-item-001",
+      "quantity": 1,
+      "unitPrice": 42,
+      "lineTotal": 42,
+      "specialInstructions": null,
+      "menuItemName": "Falafel Bowl",
+      "createdAt": "2026-07-04T11:55:00.000Z"
+    },
+    {
+      "id": "order-item-002",
+      "orderId": "order-001",
+      "menuItemId": "menu-item-002",
+      "quantity": 1,
+      "unitPrice": 58,
+      "lineTotal": 58,
+      "specialInstructions": "Extra amba on the side.",
+      "menuItemName": "Chicken Shawarma Plate",
+      "createdAt": "2026-07-04T11:55:00.000Z"
+    },
+    {
+      "id": "order-item-003",
+      "orderId": "order-002",
+      "menuItemId": "menu-item-003",
+      "quantity": 1,
+      "unitPrice": 49,
+      "lineTotal": 49,
+      "specialInstructions": "No wasabi.",
+      "menuItemName": "Salmon Avocado Roll",
+      "createdAt": "2026-07-04T13:05:00.000Z"
+    }
+  ]
+}
