@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Container, Flex, HStack, Link as ChakraLink, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Container, Flex, HStack, Link as ChakraLink, Text, VStack } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 import type { ReactNode } from "react";
 
 export type HeaderNavLink = {
@@ -17,6 +18,13 @@ type HeaderProps = {
 };
 
 export function Header({ actions, brandLabel, homeHref = "/", links }: HeaderProps) {
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const userName = user?.name ?? "Signed in";
+  const userEmail = user?.email;
+  const isAuthenticated = status === "authenticated";
+  const isLoading = status === "loading";
+
   return (
     <Box as="header" bg="bg" borderBottomWidth="1px" borderColor="border">
       <Container maxW="100%" px={{ base: "4", md: "6" }}>
@@ -65,6 +73,42 @@ export function Header({ actions, brandLabel, homeHref = "/", links }: HeaderPro
                 </ChakraLink>
               ))}
             </HStack>
+            {isAuthenticated ? (
+              <HStack align="center" gap="3" minW="0">
+                <Avatar.Root size="sm">
+                  <Avatar.Image alt={userName} src={user?.image ?? undefined} />
+                  <Avatar.Fallback name={userName} />
+                </Avatar.Root>
+                <VStack align="flex-start" gap="0" maxW={{ base: "44", md: "64" }} minW="0">
+                  <Text as="span" color="fg" fontSize="sm" fontWeight="bold" lineClamp="1">
+                    {userName}
+                  </Text>
+                  {userEmail ? (
+                    <Text as="span" color="fg.muted" fontSize="xs" lineClamp="1">
+                      {userEmail}
+                    </Text>
+                  ) : null}
+                </VStack>
+                <Button
+                  colorPalette="gray"
+                  onClick={() => void signOut()}
+                  size="sm"
+                  variant="ghost"
+                >
+                  Sign out
+                </Button>
+              </HStack>
+            ) : (
+              <Button
+                colorPalette="gray"
+                disabled={isLoading}
+                onClick={() => void signIn("google")}
+                size="sm"
+                variant="outline"
+              >
+                Sign in with Google
+              </Button>
+            )}
             {actions}
           </HStack>
         </Flex>
