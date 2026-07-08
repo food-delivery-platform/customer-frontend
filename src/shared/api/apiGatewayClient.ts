@@ -2,6 +2,19 @@ import { getSession } from "next-auth/react";
 
 const API_GATEWAY_BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
 
+type ApiGatewayErrorKind = "Authentication" | "Forbidden" | "Request";
+
+export class ApiGatewayRequestError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly kind: ApiGatewayErrorKind,
+  ) {
+    super(message);
+    this.name = "ApiGatewayRequestError";
+  }
+}
+
 function getApiGatewayUrl(path: string) {
   if (!API_GATEWAY_BASE_URL) {
     throw new Error("NEXT_PUBLIC_API_GATEWAY_URL is not configured");
@@ -31,7 +44,19 @@ function getRequestHeaders(headers?: HeadersInit) {
 
 async function parseJsonResponse<TResponse>(response: Response): Promise<TResponse> {
   if (!response.ok) {
-    throw new Error(`API Gateway request failed with status ${response.status}`);
+    if (response.status === 401) {
+      throw new ApiGatewayRequestError("API Gateway authentication failed", 401, "Authentication");
+    }
+
+    if (response.status === 403) {
+      throw new ApiGatewayRequestError("API Gateway request forbidden", 403, "Forbidden");
+    }
+
+    throw new ApiGatewayRequestError(
+      `API Gateway request failed with status ${response.status}`,
+      response.status,
+      "Request",
+    );
   }
 
   if (response.status === 204) {
