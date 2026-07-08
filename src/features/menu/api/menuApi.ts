@@ -1,6 +1,13 @@
-import { httpClient } from "@/shared/api/httpClient";
-import type { MenuItem } from "../model/menuItem";
+import axios from "axios";
 
-export function getRestaurantMenu(restaurantId: string) {
-  return httpClient<MenuItem[]>(`/restaurants/${restaurantId}/menu`);
+import type { MenuItem } from "@/shared/model/MenuItem";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+
+export async function getRestaurantMenu(restaurantId: string): Promise<MenuItem[]> {
+  const response = await axios.get<MenuItem[]>(
+    `${API_BASE_URL}/restaurants/${restaurantId}/menu`,
+  );
+
+  return response.data;
 }
