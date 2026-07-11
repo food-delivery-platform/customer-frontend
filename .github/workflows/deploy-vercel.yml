@@ -1,51 +1,26 @@
-name: Check and deploy Next.js
+name: Deploy to Vercel
 
-# Запускается при push в любую ветку.
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Checks
+    types:
+      - completed
 
 permissions:
   contents: read
 
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
 jobs:
-  check:
-    name: Lint and typecheck
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run TypeScript check
-        run: npm run typecheck
-
   deploy:
-    name: Deploy to Vercel
+    name: Deploy production
     runs-on: ubuntu-latest
 
-    # Ждём успешного завершения линтера и typecheck.
-    needs: check
-
-    # Деплоим только push в main.
-    if: github.ref == 'refs/heads/main'
-
-    # Если в main быстро пришло несколько коммитов,
-    # отменяем устаревший deployment.
-    concurrency:
-      group: vercel-production
-      cancel-in-progress: true
+    # Не запускаем deployment, если lint или typecheck завершились с ошибкой.
+    if: github.event.workflow_run.conclusion == 'success'
 
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -53,8 +28,10 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout checked commit
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -66,10 +43,21 @@ jobs:
         run: npm ci
 
       - name: Pull Vercel configuration
-        run: npx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+        run: >
+          npx --yes vercel@latest pull
+          --yes
+          --environment=production
+          --token="$VERCEL_TOKEN"
 
       - name: Build application
-        run: npx vercel@latest build --prod --token="$VERCEL_TOKEN"
+        run: >
+          npx --yes vercel@latest build
+          --prod
+          --token="$VERCEL_TOKEN"
 
       - name: Deploy to production
-        run: npx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: >
+          npx --yes vercel@latest deploy
+          --prebuilt
+          --prod
+          --token="$VERCEL_TOKEN"
