@@ -1,6 +1,6 @@
-import { httpClient } from "@/shared/api/httpClient";
-import type { Order } from "../model/order";
+import { apiGatewayProtectedRequest } from "@/shared/api/apiGatewayClient";
+import type { Order } from "../model/Order";
 
-export function getOrders() {
-  return httpClient<Order[]>("/orders");
+export function getOrders(init?: RequestInit) {
+  return apiGatewayProtectedRequest<Order[]>("/orders", init);
 }

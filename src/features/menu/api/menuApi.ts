@@ -1,6 +1,6 @@
 import { httpClient } from "@/shared/api/httpClient";
-import type { MenuItem } from "../model/menuItem";
+import type { MenuItem } from "@/shared/model/MenuItem";
 
-export function getRestaurantMenu(restaurantId: string) {
-  return httpClient<MenuItem[]>(`/restaurants/${restaurantId}/menu`);
+export function getRestaurantMenu(restaurantId: string, init?: RequestInit): Promise<MenuItem[]> {
+  return httpClient<MenuItem[]>(`/restaurants/${restaurantId}/menu`, init);
 }
