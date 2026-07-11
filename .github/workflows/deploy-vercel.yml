@@ -1,25 +1,51 @@
-name: Deploy Next.js to Vercel
+name: Check and deploy Next.js
 
+# Запускается при push в любую ветку.
 on:
   push:
-    branches:
-      - main
-
-  # Позволяет запустить deployment вручную из GitHub при необходимости.
-  workflow_dispatch:
 
 permissions:
   contents: read
 
-# Не позволяет двум production deployments выполняться одновременно.
-concurrency:
-  group: vercel-production
-  cancel-in-progress: true
-
 jobs:
-  deploy:
-    name: Build and deploy
+  check:
+    name: Lint and typecheck
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript check
+        run: npm run typecheck
+
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+
+    # Ждём успешного завершения линтера и typecheck.
+    needs: check
+
+    # Деплоим только push в main.
+    if: github.ref == 'refs/heads/main'
+
+    # Если в main быстро пришло несколько коммитов,
+    # отменяем устаревший deployment.
+    concurrency:
+      group: vercel-production
+      cancel-in-progress: true
 
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -39,17 +65,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linter
-        run: npm run lint --if-present
-
-      - name: Run type check
-        run: npm run typecheck --if-present
-
-      - name: Pull Vercel project settings
-        run: npx vercel@latest pull --yes --environment=production
+      - name: Pull Vercel configuration
+        run: npx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
 
       - name: Build application
-        run: npx vercel@latest build --prod
+        run: npx vercel@latest build --prod --token="$VERCEL_TOKEN"
 
       - name: Deploy to production
-        run: npx vercel@latest deploy --prebuilt --prod
+        run: npx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"Ы
