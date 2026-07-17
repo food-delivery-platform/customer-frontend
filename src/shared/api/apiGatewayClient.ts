@@ -1,3 +1,5 @@
+import axios from "axios";
+import type { AxiosRequestConfig } from "axios";
 import { getSession } from "next-auth/react";
 
 const API_GATEWAY_BASE_URL = process.env.NEXT_PUBLIC_API_GATEWAY_URL;
@@ -15,79 +17,76 @@ export class ApiGatewayRequestError extends Error {
   }
 }
 
-function getApiGatewayUrl(path: string) {
+function assertRelativePath(path: string) {
+  if (/^[a-z][a-z\d+\-.]*:/i.test(path)) {
+    throw new Error("API Gateway request paths must be relative");
+  }
+}
+
+function getApiGatewayClient() {
   if (!API_GATEWAY_BASE_URL) {
     throw new Error("NEXT_PUBLIC_API_GATEWAY_URL is not configured");
   }
 
-  if (/^[a-z][a-z\d+\-.]*:/i.test(path)) {
-    throw new Error("API Gateway request paths must be relative");
-  }
-
-  const baseUrl = API_GATEWAY_BASE_URL.endsWith("/")
-    ? API_GATEWAY_BASE_URL
-    : `${API_GATEWAY_BASE_URL}/`;
-  const relativePath = path.startsWith("/") ? path.slice(1) : path;
-
-  return new URL(relativePath, baseUrl).toString();
+  return axios.create({
+    baseURL: API_GATEWAY_BASE_URL,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
-function getRequestHeaders(headers?: HeadersInit) {
-  const requestHeaders = new Headers(headers);
+function throwApiGatewayError(err: unknown): never {
+  if (axios.isAxiosError(err) && err.response) {
+    const { status } = err.response;
 
-  if (!requestHeaders.has("Content-Type")) {
-    requestHeaders.set("Content-Type", "application/json");
-  }
-
-  return requestHeaders;
-}
-
-async function parseJsonResponse<TResponse>(response: Response): Promise<TResponse> {
-  if (!response.ok) {
-    if (response.status === 401) {
+    if (status === 401) {
       throw new ApiGatewayRequestError("API Gateway authentication failed", 401, "Authentication");
     }
 
-    if (response.status === 403) {
+    if (status === 403) {
       throw new ApiGatewayRequestError("API Gateway request forbidden", 403, "Forbidden");
     }
 
     throw new ApiGatewayRequestError(
-      `API Gateway request failed with status ${response.status}`,
-      response.status,
+      `API Gateway request failed with status ${status}`,
+      status,
       "Request",
     );
   }
 
-  if (response.status === 204) {
+  throw err;
+}
+
+function unwrapResponseData<TResponse>(response: { status: number; data: unknown }): TResponse {
+  if (response.status === 204 || response.data === "") {
     return undefined as TResponse;
   }
 
-  const body = await response.text();
-
-  if (!body) {
-    return undefined as TResponse;
-  }
-
-  return JSON.parse(body) as TResponse;
+  return response.data as TResponse;
 }
 
 export async function apiGatewayPublicRequest<TResponse>(
   path: string,
-  init?: RequestInit,
+  config?: AxiosRequestConfig,
 ): Promise<TResponse> {
-  const response = await fetch(getApiGatewayUrl(path), {
-    ...init,
-    headers: getRequestHeaders(init?.headers),
-  });
+  assertRelativePath(path);
 
-  return parseJsonResponse<TResponse>(response);
+  try {
+    const response = await getApiGatewayClient().request<TResponse>({ ...config, url: path });
+
+    return unwrapResponseData<TResponse>(response);
+  } catch (err) {
+    throwApiGatewayError(err);
+  }
 }
 
 export async function apiGatewayProtectedRequest<TResponse>(
   path: string,
-  init?: RequestInit,
+  config?: AxiosRequestConfig,
 ): Promise<TResponse> {
+  assertRelativePath(path);
+
   const session = await getSession();
   const googleIdToken = session?.googleIdToken;
 
@@ -95,13 +94,18 @@ export async function apiGatewayProtectedRequest<TResponse>(
     throw new Error("Google ID token is required for protected API Gateway requests");
   }
 
-  const headers = getRequestHeaders(init?.headers);
-  headers.set("Authorization", `Bearer ${googleIdToken}`);
+  try {
+    const response = await getApiGatewayClient().request<TResponse>({
+      ...config,
+      url: path,
+      headers: {
+        ...config?.headers,
+        Authorization: `Bearer ${googleIdToken}`,
+      },
+    });
 
-  const response = await fetch(getApiGatewayUrl(path), {
-    ...init,
-    headers,
-  });
-
-  return parseJsonResponse<TResponse>(response);
+    return unwrapResponseData<TResponse>(response);
+  } catch (err) {
+    throwApiGatewayError(err);
+  }
 }

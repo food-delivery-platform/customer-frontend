@@ -1,7 +1,8 @@
 "use client";
 
 import NextLink from "next/link";
-import { Box, Button, Heading, Input, Table, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Table, Text } from "@chakra-ui/react";
+import { CartQuantityInput } from "@/features/cart/ui/CartQuantityInput";
 import { useCart } from "@/features/cart/ui/CartProvider";
 import { formatCurrency } from "@/shared/lib/formatCurrency";
 import { PageShell } from "@/shared/ui/PageShell";
@@ -47,13 +48,9 @@ export function CartPage() {
               <Table.Cell>{item.name}</Table.Cell>
               <Table.Cell textAlign="right">{formatCurrency(item.price)}</Table.Cell>
               <Table.Cell textAlign="right">
-                <Input
-                  min={1}
-                  onChange={(e) => updateQuantity(item.menuItemId, Number(e.target.value))}
-                  size="sm"
-                  type="number"
-                  value={item.quantity}
-                  width="70px"
+                <CartQuantityInput
+                  onCommit={(quantity) => updateQuantity(item.menuItemId, quantity)}
+                  quantity={item.quantity}
                 />
               </Table.Cell>
               <Table.Cell textAlign="right">{formatCurrency(item.price * item.quantity)}</Table.Cell>
