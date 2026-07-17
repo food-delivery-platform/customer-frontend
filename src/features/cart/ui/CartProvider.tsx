@@ -16,6 +16,22 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
+function mergeDuplicateItems(items: CartItem[]): CartItem[] {
+  const merged: CartItem[] = [];
+
+  for (const item of items) {
+    const existing = merged.find((i) => i.menuItemId === item.menuItemId);
+
+    if (existing) {
+      existing.quantity += item.quantity;
+    } else {
+      merged.push({ ...item });
+    }
+  }
+
+  return merged;
+}
+
 type CartProviderProps = {
   children: ReactNode;
 };
@@ -29,9 +45,10 @@ export function CartProvider({ children }: CartProviderProps) {
 
     if (stored) {
       try {
+        const parsed = JSON.parse(stored) as CartItem[];
         // Synchronizing with localStorage on mount (react.dev/learn/you-might-not-need-an-effect#fetching-data).
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setItems(JSON.parse(stored) as CartItem[]);
+        setItems(mergeDuplicateItems(parsed));
       } catch {
         setItems([]);
       }
