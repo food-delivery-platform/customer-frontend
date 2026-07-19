@@ -1,9 +1,7 @@
-import NextLink from "next/link";
-import { Button } from "@chakra-ui/react";
 import { getMenuItem } from "@/features/menu/api/menuApi";
 import { getRestaurant } from "@/features/restaurants/api/restaurantsApi";
 import { MenuItemDetail } from "@/features/menu/ui/MenuItemDetail";
-import { PageShell } from "@/shared/ui/PageShell";
+import { PageError } from "@/shared/ui/PageError";
 
 type MenuItemPageProps = {
   params: Promise<{
@@ -27,15 +25,11 @@ export async function MenuItemPage({ params }: MenuItemPageProps) {
 
   if (error || !item || !restaurant) {
     return (
-      <PageShell
+      <PageError
         description={error ?? "Menu item not found."}
         eyebrow="Menu item"
         title="Dish details"
-      >
-        <Button asChild variant="outline">
-          <NextLink href="/restaurants">Back to restaurants</NextLink>
-        </Button>
-      </PageShell>
+      />
     );
   }
 

@@ -3,7 +3,7 @@ import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import { getRestaurant } from "@/features/restaurants/api/restaurantsApi";
 import { getRestaurantMenu } from "@/features/menu/api/menuApi";
 import { MenuList } from "@/features/menu/ui/MenuList";
-import { PageShell } from "@/shared/ui/PageShell";
+import { PageError } from "@/shared/ui/PageError";
 import { RestaurantDetail } from "@/features/restaurants/ui/RestaurantDetail";
 import type { MenuItem } from "@/shared/model/MenuItem";
 import type { Restaurant } from "@/shared/model/Restaurant";
@@ -43,15 +43,11 @@ export async function RestaurantPage({ params }: RestaurantPageProps) {
 
   if (error || !restaurant) {
     return (
-      <PageShell
+      <PageError
         description={error ?? "Restaurant not found."}
         eyebrow="Restaurant"
         title="Restaurant details"
-      >
-        <Button asChild variant="outline">
-          <NextLink href="/restaurants">Back to restaurants</NextLink>
-        </Button>
-      </PageShell>
+      />
     );
   }
 
