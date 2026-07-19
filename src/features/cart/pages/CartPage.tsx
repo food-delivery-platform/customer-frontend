@@ -3,12 +3,15 @@
 import NextLink from "next/link";
 import { Box, Button, Heading, Table, Text } from "@chakra-ui/react";
 import { CartQuantityInput } from "@/features/cart/ui/CartQuantityInput";
-import { useCart } from "@/features/cart/ui/CartProvider";
+import { useCartStore } from "@/features/cart/model/cartStore";
 import { formatCurrency } from "@/shared/lib/formatCurrency";
 import { PageShell } from "@/shared/ui/PageShell";
 
 export function CartPage() {
-  const { items, removeItem, updateQuantity, clearCart } = useCart();
+  const items = useCartStore((state) => state.items);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

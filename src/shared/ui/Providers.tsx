@@ -3,7 +3,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
-import { CartProvider } from "@/features/cart/ui/CartProvider";
 import { system } from "@/shared/ui/chakra";
 import { ColorModeProvider } from "@/shared/ui/color-mode";
 import { EmotionRegistry } from "@/shared/ui/EmotionRegistry";
@@ -17,9 +16,7 @@ export function Providers({ children }: ProvidersProps) {
     <SessionProvider>
       <EmotionRegistry>
         <ChakraProvider value={system}>
-          <ColorModeProvider>
-            <CartProvider>{children}</CartProvider>
-          </ColorModeProvider>
+          <ColorModeProvider>{children}</ColorModeProvider>
         </ChakraProvider>
       </EmotionRegistry>
     </SessionProvider>

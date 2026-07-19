@@ -2,7 +2,7 @@
 
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
-import { useCart } from "@/features/cart/ui/CartProvider";
+import { useCartStore } from "@/features/cart/model/cartStore";
 import type { MenuItem } from "@/shared/model/MenuItem";
 
 type AddToCartButtonProps = {
@@ -10,7 +10,7 @@ type AddToCartButtonProps = {
 };
 
 export function AddToCartButton({ menuItem }: AddToCartButtonProps) {
-  const { addItem } = useCart();
+  const addItem = useCartStore((state) => state.addItem);
   const [added, setAdded] = useState(false);
 
   function handleAddToCart() {
