@@ -20,8 +20,10 @@ export async function RestaurantPage({ params }: RestaurantPageProps) {
   let error: string | null = null;
 
   try {
-    restaurant = await getRestaurant(restaurantId);
-    items = await getRestaurantMenu(restaurantId);
+    [restaurant, items] = await Promise.all([
+      getRestaurant(restaurantId),
+      getRestaurantMenu(restaurantId),
+    ]);
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to load restaurant";
   }
