@@ -5,6 +5,8 @@ import { getRestaurantMenu } from "@/features/menu/api/menuApi";
 import { MenuList } from "@/features/menu/ui/MenuList";
 import { PageShell } from "@/shared/ui/PageShell";
 import { RestaurantDetail } from "@/features/restaurants/ui/RestaurantDetail";
+import type { MenuItem } from "@/shared/model/MenuItem";
+import type { Restaurant } from "@/shared/model/Restaurant";
 
 type RestaurantPageProps = {
   params: Promise<{
@@ -12,21 +14,32 @@ type RestaurantPageProps = {
   }>;
 };
 
-export async function RestaurantPage({ params }: RestaurantPageProps) {
-  const { restaurantId } = await params;
+type RestaurantPageData = {
+  restaurant: Restaurant | null;
+  items: MenuItem[];
+  error: string | null;
+};
 
-  let restaurant: Awaited<ReturnType<typeof getRestaurant>> | null = null;
-  let items: Awaited<ReturnType<typeof getRestaurantMenu>> = [];
-  let error: string | null = null;
-
+async function loadRestaurantPageData(restaurantId: string): Promise<RestaurantPageData> {
   try {
-    [restaurant, items] = await Promise.all([
+    const [restaurant, items] = await Promise.all([
       getRestaurant(restaurantId),
       getRestaurantMenu(restaurantId),
     ]);
+
+    return { restaurant, items, error: null };
   } catch (err) {
-    error = err instanceof Error ? err.message : "Failed to load restaurant";
+    return {
+      restaurant: null,
+      items: [],
+      error: err instanceof Error ? err.message : "Failed to load restaurant",
+    };
   }
+}
+
+export async function RestaurantPage({ params }: RestaurantPageProps) {
+  const { restaurantId } = await params;
+  const { restaurant, items, error } = await loadRestaurantPageData(restaurantId);
 
   if (error || !restaurant) {
     return (
