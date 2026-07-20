@@ -14,6 +14,8 @@ export function CartPage() {
   const clearCart = useCartStore((state) => state.clearCart);
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const restaurantIds = new Set(items.map((item) => item.restaurantId));
+  const hasMultipleRestaurants = restaurantIds.size > 1;
 
   if (items.length === 0) {
     return (
@@ -83,10 +85,17 @@ export function CartPage() {
         <Button colorPalette="red" onClick={clearCart} variant="outline">
           Clear cart
         </Button>
-        <Text color="fg.muted" fontSize="sm" ml="auto" my="auto">
-          Checkout coming soon
-        </Text>
+        <Button disabled ml="auto" title="Checkout coming soon">
+          Place order
+        </Button>
       </Box>
+
+      {hasMultipleRestaurants ? (
+        <Text color="fg.error" fontSize="sm" mt={2} textAlign="right">
+          Your cart has items from multiple restaurants. Remove items from all but one restaurant
+          to place an order.
+        </Text>
+      ) : null}
     </Box>
   );
 }

@@ -14,7 +14,12 @@ export function AddToCartButton({ menuItem }: AddToCartButtonProps) {
   const [added, setAdded] = useState(false);
 
   function handleAddToCart() {
-    addItem({ menuItemId: menuItem.id, name: menuItem.name, price: menuItem.price });
+    addItem({
+      menuItemId: menuItem.id,
+      restaurantId: menuItem.restaurantId,
+      name: menuItem.name,
+      price: menuItem.price,
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   }
