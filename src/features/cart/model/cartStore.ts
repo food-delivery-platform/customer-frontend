@@ -12,6 +12,23 @@ type CartState = {
   clearCart: () => void;
 };
 
+function isValidCartItem(item: unknown): item is CartItem {
+  if (typeof item !== "object" || item === null) {
+    return false;
+  }
+
+  const candidate = item as Partial<CartItem>;
+
+  return (
+    typeof candidate.menuItemId === "string" &&
+    typeof candidate.restaurantId === "string" &&
+    typeof candidate.name === "string" &&
+    typeof candidate.price === "number" &&
+    typeof candidate.currency === "string" &&
+    typeof candidate.quantity === "number"
+  );
+}
+
 export const useCartStore = create<CartState>()(
   persist(
     (set) => ({
@@ -52,6 +69,12 @@ export const useCartStore = create<CartState>()(
       name: "cart-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ items: state.items }),
+      version: 1,
+      migrate: (persistedState) => {
+        const items = (persistedState as { items?: unknown[] } | undefined)?.items ?? [];
+
+        return { items: items.filter(isValidCartItem) };
+      },
     },
   ),
 );
