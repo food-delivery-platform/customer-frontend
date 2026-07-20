@@ -26,13 +26,13 @@ export function MenuList({ items }: MenuListProps) {
               <Badge colorPalette={item.isAvailable ? "green" : "red"}>
                 {item.isAvailable ? "Available" : "Unavailable"}
               </Badge>
-              {item.category ? <Badge colorPalette="gray">{item.category}</Badge> : null}
+              {item.category ? <Badge colorPalette="gray">{item.category.name}</Badge> : null}
               {item.spicyLevel ? <Badge colorPalette="orange">🌶️ {item.spicyLevel}/3</Badge> : null}
               {item.labels?.vegetarian ? <Badge colorPalette="green">Vegetarian</Badge> : null}
               {item.labels?.vegan ? <Badge colorPalette="green">Vegan</Badge> : null}
             </HStack>
             <Heading mb={3} size="md">
-              {formatCurrency(item.price)}
+              {formatCurrency(item.price, item.currency)}
             </Heading>
             <Box display="flex" gap={2}>
               <AddToCartButton menuItem={item} />

@@ -2,13 +2,15 @@ export type Restaurant = {
   id: string;
   ownerId: string;
   addressId: string;
+
   name: string;
-  slug: string | null;
-  description: string | null;
-  cuisineTags: string[];
+  slug?: string;
+  description?: string;
+
   isOpen: boolean;
-  rating: number | null;
-  imageUrl: string | null;
+  rating?: number;
+  imageUrl?: string;
+
   createdAt: string;
   updatedAt: string;
 };

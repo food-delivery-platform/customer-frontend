@@ -1,6 +1,4 @@
 {
-  "/restaurants/:restaurantId/menu": "/menuItems?restaurantId=:restaurantId",
-  "/menu-items/:menuItemId": "/menuItems/:menuItemId",
   "/restaurants/:restaurantId/orders": "/orders?venueId=:restaurantId",
   "/orders/:orderId/items": "/orderItems?orderId=:orderId"
 }

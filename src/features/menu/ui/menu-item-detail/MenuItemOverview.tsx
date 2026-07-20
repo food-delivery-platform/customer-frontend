@@ -11,13 +11,13 @@ export function MenuItemOverview({ item }: MenuItemOverviewProps) {
     <Stack gap={4} mb={6}>
       <Flex align="center" justify="space-between">
         <Text fontWeight="semibold">Price</Text>
-        <Heading size="md">{formatCurrency(item.price)}</Heading>
+        <Heading size="md">{formatCurrency(item.price, item.currency)}</Heading>
       </Flex>
 
       {item.category ? (
         <Flex align="center" justify="space-between">
           <Text fontWeight="semibold">Category</Text>
-          <Text>{item.category}</Text>
+          <Text>{item.category.name}</Text>
         </Flex>
       ) : null}
 

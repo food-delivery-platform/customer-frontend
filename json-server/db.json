@@ -7,7 +7,6 @@
       "name": "Demo Bistro",
       "slug": "demo-bistro",
       "description": "Fresh bowls, grilled plates, and fast delivery for local customers.",
-      "cuisineTags": ["Mediterranean", "Healthy", "Grill"],
       "isOpen": true,
       "rating": 4.7,
       "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5",
@@ -21,7 +20,6 @@
       "name": "Sushi Yard",
       "slug": "sushi-yard",
       "description": "Sushi rolls, rice bowls, and crisp sides prepared to order.",
-      "cuisineTags": ["Japanese", "Sushi", "Bowls"],
       "isOpen": false,
       "rating": 4.4,
       "imageUrl": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c",
@@ -29,16 +27,20 @@
       "updatedAt": "2026-07-04T08:45:00.000Z"
     }
   ],
+  "categories": [
+    { "id": "category-bowls", "restaurantId": "demo-restaurant", "name": "Bowls" },
+    { "id": "category-plates", "restaurantId": "demo-restaurant", "name": "Plates" },
+    { "id": "category-rolls", "restaurantId": "sushi-yard", "name": "Rolls" }
+  ],
   "menuItems": [
     {
       "id": "menu-item-001",
       "restaurantId": "demo-restaurant",
-      "menuItemId": "falafel-bowl",
       "name": "Falafel Bowl",
       "description": "Falafel, tahini, chopped salad, pickles, and herbed rice.",
-      "price": 42,
-      "imageKey": "menu/falafel-bowl.jpg",
-      "category": "Bowls",
+      "category": { "id": "category-bowls", "restaurantId": "demo-restaurant", "name": "Bowls" },
+      "price": "42.00",
+      "currency": "ILS",
       "isAvailable": true,
       "ingredients": ["falafel", "tahini", "tomato", "cucumber", "rice"],
       "labels": {
@@ -68,12 +70,11 @@
     {
       "id": "menu-item-002",
       "restaurantId": "demo-restaurant",
-      "menuItemId": "chicken-shawarma-plate",
       "name": "Chicken Shawarma Plate",
       "description": "Marinated chicken, rice, salad, hummus, and warm pita.",
-      "price": 58,
-      "imageKey": "menu/chicken-shawarma-plate.jpg",
-      "category": "Plates",
+      "category": { "id": "category-plates", "restaurantId": "demo-restaurant", "name": "Plates" },
+      "price": "58.00",
+      "currency": "ILS",
       "isAvailable": true,
       "ingredients": ["chicken", "rice", "hummus", "pita", "salad"],
       "labels": {
@@ -103,14 +104,14 @@
     {
       "id": "menu-item-003",
       "restaurantId": "sushi-yard",
-      "menuItemId": "salmon-avocado-roll",
       "name": "Salmon Avocado Roll",
       "description": "Eight pieces with salmon, avocado, cucumber, and sesame.",
-      "price": 49,
-      "imageKey": "menu/salmon-avocado-roll.jpg",
-      "category": "Rolls",
+      "category": { "id": "category-rolls", "restaurantId": "sushi-yard", "name": "Rolls" },
+      "price": "49.00",
+      "currency": "ILS",
       "isAvailable": true,
       "ingredients": ["salmon", "avocado", "cucumber", "rice", "nori"],
+      "allergens": ["fish", "sesame"],
       "labels": {
         "spicy": false,
         "vegetarian": false,

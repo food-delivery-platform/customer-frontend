@@ -16,6 +16,7 @@ export function CartPage() {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const restaurantIds = new Set(items.map((item) => item.restaurantId));
   const hasMultipleRestaurants = restaurantIds.size > 1;
+  const currency = items[0]?.currency ?? "USD";
 
   if (items.length === 0) {
     return (
@@ -51,14 +52,16 @@ export function CartPage() {
           {items.map((item) => (
             <Table.Row key={item.menuItemId}>
               <Table.Cell>{item.name}</Table.Cell>
-              <Table.Cell textAlign="right">{formatCurrency(item.price)}</Table.Cell>
+              <Table.Cell textAlign="right">{formatCurrency(item.price, item.currency)}</Table.Cell>
               <Table.Cell textAlign="right">
                 <CartQuantityInput
                   onCommit={(quantity) => updateQuantity(item.menuItemId, quantity)}
                   quantity={item.quantity}
                 />
               </Table.Cell>
-              <Table.Cell textAlign="right">{formatCurrency(item.price * item.quantity)}</Table.Cell>
+              <Table.Cell textAlign="right">
+                {formatCurrency(item.price * item.quantity, item.currency)}
+              </Table.Cell>
               <Table.Cell textAlign="center">
                 <Button
                   colorPalette="red"
@@ -75,7 +78,7 @@ export function CartPage() {
       </Table.Root>
 
       <Box display="flex" justifyContent="flex-end" mt={6}>
-        <Heading size="md">Total: {formatCurrency(total)}</Heading>
+        <Heading size="md">Total: {formatCurrency(total, currency)}</Heading>
       </Box>
 
       <Box display="flex" gap={4} mt={6}>

@@ -18,7 +18,8 @@ export function AddToCartButton({ menuItem }: AddToCartButtonProps) {
       menuItemId: menuItem.id,
       restaurantId: menuItem.restaurantId,
       name: menuItem.name,
-      price: menuItem.price,
+      price: Number(menuItem.price),
+      currency: menuItem.currency,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

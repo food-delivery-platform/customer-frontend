@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"npm:dev:next\" \"npm:dev:api\"",
     "dev:next": "next dev",
-    "dev:api": "json-server --watch json-server/db.json --routes json-server/routes.json --port 8080",
+    "dev:api": "node json-server/server.js",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

@@ -34,12 +34,7 @@ export function RestaurantDetail({ restaurant }: RestaurantDetailProps) {
         <Badge colorPalette={restaurant.isOpen ? "green" : "red"}>
           {restaurant.isOpen ? "Open" : "Closed"}
         </Badge>
-        {restaurant.rating !== null ? <Badge colorPalette="yellow">⭐ {restaurant.rating}</Badge> : null}
-        {restaurant.cuisineTags.map((tag) => (
-          <Badge colorPalette="gray" key={tag} variant="outline">
-            {tag}
-          </Badge>
-        ))}
+        {restaurant.rating !== undefined ? <Badge colorPalette="yellow">⭐ {restaurant.rating}</Badge> : null}
       </HStack>
     </Box>
   );

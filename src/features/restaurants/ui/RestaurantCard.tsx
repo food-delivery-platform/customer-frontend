@@ -26,16 +26,11 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
             <Badge colorPalette={restaurant.isOpen ? "green" : "red"}>
               {restaurant.isOpen ? "Open" : "Closed"}
             </Badge>
-            {restaurant.rating !== null ? (
+            {restaurant.rating !== undefined ? (
               <Text fontSize="sm" fontWeight="semibold">
                 ⭐ {restaurant.rating}
               </Text>
             ) : null}
-            {restaurant.cuisineTags.map((tag) => (
-              <Badge colorPalette="gray" key={tag} variant="outline">
-                {tag}
-              </Badge>
-            ))}
           </HStack>
         </Card.Body>
       </NextLink>

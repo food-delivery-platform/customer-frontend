@@ -1,17 +1,20 @@
+import type { Category } from "./Category";
+
 export type MenuItem = {
   id: string;
-
   restaurantId: string;
-  menuItemId: string;
 
   name: string;
   description?: string;
-  price: number;
-  imageKey?: string;
-  category?: string;
+  category?: Category;
+
+  price: string; // Serialized as string, example: "12.99"
+  currency: string;
+
   isAvailable: boolean;
 
   ingredients?: string[];
+  allergens?: string[];
 
   labels?: {
     spicy?: boolean;
@@ -38,7 +41,4 @@ export type MenuItem = {
     fat?: number;
     carbs?: number;
   };
-
-  createdAt: string;
-  updatedAt: string;
 };

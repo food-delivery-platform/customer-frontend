@@ -1,12 +1,9 @@
 import NextLink from "next/link";
 import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import { getRestaurant } from "@/features/restaurants/api/restaurantsApi";
-import { getRestaurantMenu } from "@/features/menu/api/menuApi";
 import { MenuList } from "@/features/menu/ui/MenuList";
 import { PageError } from "@/shared/ui/PageError";
 import { RestaurantDetail } from "@/features/restaurants/ui/RestaurantDetail";
-import type { MenuItem } from "@/shared/model/MenuItem";
-import type { Restaurant } from "@/shared/model/Restaurant";
 
 type RestaurantPageProps = {
   params: Promise<{
@@ -14,32 +11,17 @@ type RestaurantPageProps = {
   }>;
 };
 
-type RestaurantPageData = {
-  restaurant: Restaurant | null;
-  items: MenuItem[];
-  error: string | null;
-};
-
-async function loadRestaurantPageData(restaurantId: string): Promise<RestaurantPageData> {
-  try {
-    const [restaurant, items] = await Promise.all([
-      getRestaurant(restaurantId),
-      getRestaurantMenu(restaurantId),
-    ]);
-
-    return { restaurant, items, error: null };
-  } catch (err) {
-    return {
-      restaurant: null,
-      items: [],
-      error: err instanceof Error ? err.message : "Failed to load restaurant",
-    };
-  }
-}
-
 export async function RestaurantPage({ params }: RestaurantPageProps) {
   const { restaurantId } = await params;
-  const { restaurant, items, error } = await loadRestaurantPageData(restaurantId);
+
+  let restaurant: Awaited<ReturnType<typeof getRestaurant>> | null = null;
+  let error: string | null = null;
+
+  try {
+    restaurant = await getRestaurant(restaurantId);
+  } catch (err) {
+    error = err instanceof Error ? err.message : "Failed to load restaurant";
+  }
 
   if (error || !restaurant) {
     return (
@@ -50,6 +32,8 @@ export async function RestaurantPage({ params }: RestaurantPageProps) {
       />
     );
   }
+
+  const items = restaurant.menuItems;
 
   return (
     <Box mx="auto" px={{ base: "4", md: "6" }} py="10" width="min(100%, 960px)">
