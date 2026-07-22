@@ -82,6 +82,7 @@ async function refreshGoogleIdToken(refreshToken: string): Promise<GoogleTokenRe
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     Google({
       authorization: {
