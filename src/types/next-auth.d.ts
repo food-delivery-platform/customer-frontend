@@ -6,6 +6,7 @@ declare module "next-auth" {
   interface Session {
     authError?: AuthTokenError;
     googleIdToken?: string;
+    customerId?: string;
   }
 }
 
