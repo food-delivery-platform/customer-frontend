@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone CommonJS dev-mock server, not part of the Next.js app.
+    "json-server/server.js",
   ]),
 ]);
 

@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 import { system } from "@/shared/ui/chakra";
 import { ColorModeProvider } from "@/shared/ui/color-mode";
+import { EmotionRegistry } from "@/shared/ui/EmotionRegistry";
 
 type ProvidersProps = {
   children: ReactNode;
@@ -13,9 +14,11 @@ type ProvidersProps = {
 export function Providers({ children }: ProvidersProps) {
   return (
     <SessionProvider>
-      <ChakraProvider value={system}>
-        <ColorModeProvider>{children}</ColorModeProvider>
-      </ChakraProvider>
+      <EmotionRegistry>
+        <ChakraProvider value={system}>
+          <ColorModeProvider>{children}</ColorModeProvider>
+        </ChakraProvider>
+      </EmotionRegistry>
     </SessionProvider>
   );
 }
