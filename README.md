@@ -21,8 +21,6 @@ Configure these environment variables in Vercel for the deployed environment:
 AUTH_SECRET=
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
-NEXT_PUBLIC_API_BASE_URL=
-NEXT_PUBLIC_API_GATEWAY_URL=
 ```
 
 `AUTH_SECRET` must be a cryptographically secure random value of at least 32 characters.
@@ -37,6 +35,11 @@ VERCEL_PROJECT_ID=
 AUTH_SECRET=
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
+```
+
+Optional API endpoint secrets, only needed when deploying against non-default APIs:
+
+```bash
 NEXT_PUBLIC_API_BASE_URL=
 NEXT_PUBLIC_API_GATEWAY_URL=
 ```

@@ -72,8 +72,14 @@ jobs:
           sync_vercel_env "AUTH_SECRET" "$AUTH_SECRET" "--sensitive"
           sync_vercel_env "AUTH_GOOGLE_ID" "$AUTH_GOOGLE_ID"
           sync_vercel_env "AUTH_GOOGLE_SECRET" "$AUTH_GOOGLE_SECRET" "--sensitive"
-          sync_vercel_env "NEXT_PUBLIC_API_BASE_URL" "$NEXT_PUBLIC_API_BASE_URL"
-          sync_vercel_env "NEXT_PUBLIC_API_GATEWAY_URL" "$NEXT_PUBLIC_API_GATEWAY_URL"
+
+          if [[ -n "$NEXT_PUBLIC_API_BASE_URL" ]]; then
+            sync_vercel_env "NEXT_PUBLIC_API_BASE_URL" "$NEXT_PUBLIC_API_BASE_URL"
+          fi
+
+          if [[ -n "$NEXT_PUBLIC_API_GATEWAY_URL" ]]; then
+            sync_vercel_env "NEXT_PUBLIC_API_GATEWAY_URL" "$NEXT_PUBLIC_API_GATEWAY_URL"
+          fi
 
       - name: Pull Vercel configuration
         run: >
