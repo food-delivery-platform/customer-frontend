@@ -1,8 +1,9 @@
 "use client";
 
 import NextLink from "next/link";
-import { Box, Button, Heading, Table, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Table } from "@chakra-ui/react";
 import { CartQuantityInput } from "@/features/cart/ui/CartQuantityInput";
+import { PlaceOrderSection } from "@/features/cart/ui/PlaceOrderSection";
 import { useCartStore } from "@/features/cart/model/cartStore";
 import { formatCurrency } from "@/shared/lib/formatCurrency";
 import { PageShell } from "@/shared/ui/PageShell";
@@ -88,17 +89,13 @@ export function CartPage() {
         <Button colorPalette="red" onClick={clearCart} variant="outline">
           Clear cart
         </Button>
-        <Button disabled ml="auto" title="Checkout coming soon">
-          Place order
-        </Button>
       </Box>
 
-      {hasMultipleRestaurants ? (
-        <Text color="fg.error" fontSize="sm" mt={2} textAlign="right">
-          Your cart has items from multiple restaurants. Remove items from all but one restaurant
-          to place an order.
-        </Text>
-      ) : null}
+      <PlaceOrderSection
+        hasMultipleRestaurants={hasMultipleRestaurants}
+        items={items}
+        onOrderPlaced={clearCart}
+      />
     </Box>
   );
 }

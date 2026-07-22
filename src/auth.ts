@@ -146,6 +146,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         ...session,
         authError: token.authError,
         googleIdToken: token.googleIdToken,
+        customerId: token.sub,
       };
     },
   },
